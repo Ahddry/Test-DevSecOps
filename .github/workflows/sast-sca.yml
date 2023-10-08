@@ -38,7 +38,7 @@ jobs:
 
             - name: Run Dependency-Check
               run: |
-                  dependency-check/bin/dependency-check.sh --scan . --out . --format HTML
+                  dependency-check/dependency-check/bin/dependency-check.sh --scan . --out . --format HTML
               continue-on-error: true
 
             - name: Upload Dependency-Check Report
