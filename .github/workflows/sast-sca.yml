@@ -1,4 +1,4 @@
-name: SonarQube Analysis
+name: SonarQube & OWASP Analysis
 
 on:
     push:
@@ -26,9 +26,10 @@ jobs:
               env:
                   # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information, if any
                   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
             - name: Install OWASP Dependency-Check
               run: |
-                  $ VERSION=$(curl -s https://jeremylong.github.io/DependencyCheck/current.txt)
+                  VERSION=$(curl -s https://jeremylong.github.io/DependencyCheck/current.txt)
                   curl -Ls "https://github.com/jeremylong/DependencyCheck/releases/download/v$VERSION/dependency-check-$VERSION-release.zip" --output dependency-check.zip
 
                   unzip dependency-check.zip -d dependency-check
