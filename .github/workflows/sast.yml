@@ -21,12 +21,8 @@ jobs:
             - name: Install Dependencies
               run: npm install
 
-            - name: Run SonarQube Analysis
-              run: |
-                  npm run build
-                  sonar-scanner \
-                    -Dsonar.sources=. \
-                    -Dsonar.host.url=$SONAR_HOST_URL \
-                    -Dsonar.login=$SONAR_TOKEN
-
-            
+            - name: SonarCloud Scan
+              uses: SonarSource/sonarcloud-github-action@master
+              env:
+                  # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information, if any
+                  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
