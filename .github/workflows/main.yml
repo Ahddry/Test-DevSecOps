@@ -6,14 +6,14 @@ on:
             - main
 
 jobs:
-    SonarQube:
+    SAST-SonarQube:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout code
               uses: actions/checkout@v3
 
             - name: Set up Node.js
-              uses: actions/setup-node@v2
+              uses: actions/setup-node@v3
               with:
                   node-version: 16
 
@@ -25,14 +25,14 @@ jobs:
               env:
                   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-    OWASP_dependency_check:
+    SCA-OWASP_dependency_check:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout code
               uses: actions/checkout@v3
 
             - name: Set up Node.js
-              uses: actions/setup-node@v2
+              uses: actions/setup-node@v3
               with:
                   node-version: 16
 
