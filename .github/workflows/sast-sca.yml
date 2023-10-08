@@ -33,7 +33,9 @@ jobs:
                   curl -Ls "https://github.com/jeremylong/DependencyCheck/releases/download/v$VERSION/dependency-check-$VERSION-release.zip" --output dependency-check.zip
 
                   unzip dependency-check.zip -d dependency-check
-                  ls -R dependency-check  # Affichez le contenu du dossier pour vérification
+                  echo "TEEEEEEEEEEEEEEEEEEESSSSSSSSSSSSSSSTTTTTTTTTTTTTTTTTTT"
+                  ls -R dependency-check
+                  echo "TEEEEEEEEEEEEEEEEEEESSSSSSSSSSSSSSSTTTTTTTTTTTTTTTTTTT"
                   chmod +x dependency-check/dependency-check-$VERSION-release/bin/dependency-check.sh
               shell: bash
 
