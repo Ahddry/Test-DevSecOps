@@ -1,0 +1,45 @@
+name: SonarQube Analysis
+
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    sonarqube:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v2
+              with:
+                  node-version: 16
+
+            - name: Install Dependencies
+              run: npm install
+
+            - name: SonarCloud Scan
+              uses: SonarSource/sonarcloud-github-action@master
+              env:
+                  # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information, if any
+                  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+            - name: Install OWASP Dependency-Check
+              run: |
+                  wget https://dl.bintray.com/jeremy-long/owasp/dependency-check-7.2.0-release.zip
+                  unzip dependency-check-7.2.0-release.zip -d dependency-check
+                  chmod +x dependency-check/bin/dependency-check.sh
+              shell: bash
+
+            - name: Run Dependency-Check
+              run: |
+                  dependency-check/bin/dependency-check.sh --scan . --out . --format HTML
+              continue-on-error: true
+
+            - name: Upload Dependency-Check Report
+              uses: actions/upload-artifact@v2
+              with:
+                  name: dependency-check-report
+                  path: dependency-check-report.html
