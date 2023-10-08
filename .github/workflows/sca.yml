@@ -1,4 +1,4 @@
-name: SonarQube & OWASP Analysis
+name: SCA - OWASP Dependency-Check Analysis
 
 on:
     push:
@@ -6,7 +6,7 @@ on:
             - main
 
 jobs:
-    sonarqube:
+    dependency_check:
         runs-on: ubuntu-latest
 
         steps:
@@ -18,20 +18,10 @@ jobs:
               with:
                   node-version: 16
 
-            - name: Install Dependencies
-              run: npm install
-
-            - name: SonarCloud Scan
-              uses: SonarSource/sonarcloud-github-action@master
-              env:
-                  # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information, if any
-                  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
             - name: Install OWASP Dependency-Check
               run: |
                   VERSION=$(curl -s https://jeremylong.github.io/DependencyCheck/current.txt)
                   curl -Ls "https://github.com/jeremylong/DependencyCheck/releases/download/v$VERSION/dependency-check-$VERSION-release.zip" --output dependency-check.zip
-
                   unzip dependency-check.zip -d dependency-check
                   chmod +x dependency-check/dependency-check/bin/dependency-check.sh
               shell: bash
@@ -42,7 +32,7 @@ jobs:
               continue-on-error: true
 
             - name: Upload Dependency-Check Report
-              uses: actions/upload-artifact@v2
+              uses: actions/upload-artifact@v3
               with:
                   name: dependency-check-report
                   path: dependency-check-report.html
