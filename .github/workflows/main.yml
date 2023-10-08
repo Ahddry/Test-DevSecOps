@@ -1,0 +1,19 @@
+name: Main Workflow
+
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    sonarqube:
+        runs-on: ubuntu-latest
+        steps:
+            - name: SonarQube Analysis
+              uses: ./.github/workflows/sast.yml
+
+    dependency_check:
+        runs-on: ubuntu-latest
+        steps:
+            - name: OWASP Dependency-Check Analysis
+              uses: ./.github/workflows/sca.yml
