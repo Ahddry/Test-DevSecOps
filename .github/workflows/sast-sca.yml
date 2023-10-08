@@ -28,6 +28,9 @@ jobs:
                   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
             - name: Install OWASP Dependency-Check
               run: |
+                  $ VERSION=$(curl -s https://jeremylong.github.io/DependencyCheck/current.txt)
+                  curl -Ls "https://github.com/jeremylong/DependencyCheck/releases/download/v$VERSION/dependency-check-$VERSION-release.zip" --output dependency-check.zip
+
                   wget https://dl.bintray.com/jeremy-long/owasp/dependency-check-7.2.0-release.zip
                   unzip dependency-check-7.2.0-release.zip -d dependency-check
                   chmod +x dependency-check/bin/dependency-check.sh
