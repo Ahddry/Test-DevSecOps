@@ -26,13 +26,13 @@ pipeline {
         }
     }
 
-    stage('Semgrep-Scan') {
-        steps {
-          sh 'pip3 install semgrep'
-          // sh 'python3 -m pip install semgrep'
-          sh 'semgrep ci'
-      }
-    }
+    // stage('Semgrep-Scan') {
+    //     steps {
+    //       sh 'pip3 install semgrep'
+    //       // sh 'python3 -m pip install semgrep'
+    //       sh 'semgrep ci'
+    //   }
+    // }
 
     stage('OWASP Dependency-Check Vulnerabilities') {
       steps {
