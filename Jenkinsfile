@@ -20,15 +20,15 @@ pipeline {
     stage('Build') {
         steps {
             echo 'Building..'
-            echo '${SEMGREP_APP_TOKEN}'
-            echo SEMGREP_APP_TOKEN
             sh 'pip --version'
+            sh 'semgrep --version'
+            echo 'Build completed.'
         }
     }
 
     stage('Semgrep-Scan') {
         steps {
-          sh 'pip3 install semgrep'
+          // sh 'pip3 install semgrep'
           // sh 'python3 -m pip install semgrep'
           sh 'semgrep ci'
       }
