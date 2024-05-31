@@ -18,6 +18,7 @@ environment {
             echo 'Building..'
             echo '${SEMGREP_APP_TOKEN}'
             echo SEMGREP_APP_TOKEN
+            sh 'pip --version'
         }
     }
 
