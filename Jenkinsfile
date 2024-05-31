@@ -6,26 +6,37 @@ pipeline {
 //     timestamps()
 //   }
 
-environment {
+  environment {
     // The following variable is required for a Semgrep AppSec Platform-connected scan:
     // 6a24fa008adf86f8a2ba70af6d82f91cec39c91e032b6d934534b51e08a40ef0
     SEMGREP_APP_TOKEN = credentials('SEMGREP_APP_TOKEN')
-}
+  }
 
   stages {
+    stage('Install dependencies') {
+      steps{
+          step {
+          script {
+            sh 'apt-get update'
+            sh 'apt-get install -y python3 python3-pip'
+            sh 'pip3 install semgrep'
+          }
+      }
+    }
+    }
+
     stage('Build') {
         steps {
             echo 'Building..'
             echo '${SEMGREP_APP_TOKEN}'
             echo SEMGREP_APP_TOKEN
-            sh 'pip --version'
         }
     }
 
     stage('Semgrep-Scan') {
         steps {
           // sh 'pip3 install semgrep'
-          sh 'python3 -m pip install semgrep'
+          // sh 'python3 -m pip install semgrep'
           sh 'semgrep ci'
       }
     }
