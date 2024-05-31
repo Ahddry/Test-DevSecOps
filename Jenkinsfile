@@ -23,7 +23,8 @@ environment {
 
     stage('Semgrep-Scan') {
         steps {
-          sh 'pip3 install semgrep'
+          // sh 'pip3 install semgrep'
+          sh 'python3 -m pip install semgrep'
           sh 'semgrep ci'
       }
     }
