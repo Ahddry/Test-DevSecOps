@@ -13,15 +13,13 @@ pipeline {
   }
 
   stages {
-    stage('Install dependencies') {
+        stage('Install dependencies') {
       steps{
-          step {
           script {
             sh 'apt-get update'
             sh 'apt-get install -y python3 python3-pip'
             sh 'pip3 install semgrep'
           }
-      }
     }
     }
 
