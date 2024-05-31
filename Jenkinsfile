@@ -1,5 +1,9 @@
 pipeline {
-  agent any
+  agent {
+    node {
+      label 'docker-agent'
+    }
+  }
 
 //   // using the Timestamper plugin we can add timestamps to the console log
 //   options {
@@ -13,16 +17,6 @@ pipeline {
   }
 
   stages {
-        stage('Install dependencies') {
-      steps{
-          script {
-            sh 'apt-get update'
-            sh 'apt-get install -y python3 python3-pip'
-            sh 'pip3 install semgrep'
-          }
-    }
-    }
-
     stage('Build') {
         steps {
             echo 'Building..'
@@ -34,7 +28,7 @@ pipeline {
     stage('Semgrep-Scan') {
         steps {
           // sh 'pip3 install semgrep'
-          // sh 'python3 -m pip install semgrep'
+          sh 'python3 -m pip install semgrep'
           sh 'semgrep ci'
       }
     }
