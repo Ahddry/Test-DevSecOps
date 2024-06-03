@@ -38,14 +38,12 @@ pipeline {
 
     stage('OWASP Dependency-Check Vulnerabilities') {
       steps {
-        cache(config: 'dependency-check-cache', key: 'dependency-check-cache', paths: ['dependency-check-data']) {
-          dependencyCheck additionalArguments: '''
-              -o './'
-              -s './'
-              -f 'ALL'
-              --prettyPrint''', odcInstallation: 'OWASP Dependency-Check Vulnerabilities'
-          dependencyCheckPublisher pattern: 'dependency-check-report.xml'
-        }
+        dependencyCheck additionalArguments: '''
+                    -o './'
+                    -s './'
+                    -f 'ALL'
+                    --prettyPrint''', odcInstallation: 'OWASP Dependency-Check Vulnerabilities'
+        dependencyCheckPublisher pattern: 'dependency-check-report.xml'
       }
     }
 
