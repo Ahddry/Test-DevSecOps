@@ -14,7 +14,7 @@ pipeline {
     // The following variable is required for a Semgrep AppSec Platform-connected scan:
     // 6a24fa008adf86f8a2ba70af6d82f91cec39c91e032b6d934534b51e08a40ef0
     SEMGREP_APP_TOKEN = credentials('SEMGREP_APP_TOKEN')
-    NVD = credentials('NVD_CREDENTIALS')
+    NVD_CREDENTIALS = credentials('NVD_CREDENTIALS')
   }
 
   stages {
@@ -43,7 +43,7 @@ pipeline {
                     -o './'
                     -s './'
                     -f 'ALL'
-                    --prettyPrint''', odcInstallation: 'OWASP Dependency-Check Vulnerabilities', nvdCredentialsId: '${NVD}'
+                    --prettyPrint''', odcInstallation: 'OWASP Dependency-Check Vulnerabilities', nvdCredentialsId: '${NVD_CREDENTIALS}'
         dependencyCheckPublisher pattern: 'dependency-check-report.xml'
       }
     }
