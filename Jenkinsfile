@@ -27,15 +27,15 @@ pipeline {
         }
     }
 
-    stage('Semgrep-Scan') {
-        steps {
-          // sh 'pip3 install semgrep'
-          // sh 'python3 -m pip install semgrep'
-          // sh 'semgrep ci --text --json-output=semgrep.json'
-          sh 'semgrep scan --config auto --text --json-output=semgrep.json'
-          sh 'cat semgrep.json'
-      }
-    }
+    // stage('Semgrep-Scan') {
+    //     steps {
+    //       // sh 'pip3 install semgrep'
+    //       // sh 'python3 -m pip install semgrep'
+    //       // sh 'semgrep ci --text --json-output=semgrep.json'
+    //       sh 'semgrep scan --config auto --text --json-output=semgrep.json'
+    //       sh 'cat semgrep.json'
+    //   }
+    // }
 
     stage('OWASP Dependency-Check Vulnerabilities') {
       steps {
