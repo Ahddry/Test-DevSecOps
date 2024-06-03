@@ -38,7 +38,7 @@ pipeline {
 
     stage('OWASP Dependency-Check Vulnerabilities') {
       steps {
-        cache('dependency-check-cache') {
+        cache(config: 'dependency-check-cache', key: 'dependency-check-cache', paths: ['dependency-check-data']) {
           dependencyCheck additionalArguments: '''
               -o './'
               -s './'
