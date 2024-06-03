@@ -38,11 +38,13 @@ pipeline {
 
     stage('OWASP Dependency-Check Vulnerabilities') {
       steps {
-        script {
-          def scanner = [$class: 'DependencyCheckBuilder', pattern: 'dependency-check-report.xml']
-          def customCache = [$class: 'FileCache', cacheDirectory: 'dependency-check-cache']
-          scanner = scanner.getCaches().add(customCache)
-          scanner.runScan()
+        cache('dependency-check-cache') {
+          dependencyCheck additionalArguments: '''
+              -o './'
+              -s './'
+              -f 'ALL'
+              --prettyPrint''', odcInstallation: 'OWASP Dependency-Check Vulnerabilities'
+          dependencyCheckPublisher pattern: 'dependency-check-report.xml'
         }
       }
     }
