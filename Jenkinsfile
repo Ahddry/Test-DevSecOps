@@ -30,20 +30,22 @@ pipeline {
         steps {
           // sh 'pip3 install semgrep'
           // sh 'python3 -m pip install semgrep'
-          sh 'semgrep ci --json'
+          // sh 'semgrep ci --text --json-output=semgrep.json'
+          sh 'semgrep scan --config auto --text --json-output=semgrep.json'
+          sh 'cat semgrep.json'
       }
     }
 
-    // stage('OWASP Dependency-Check Vulnerabilities') {
-    //   steps {
-    //     dependencyCheck additionalArguments: '''
-    //                 -o './'
-    //                 -s './'
-    //                 -f 'ALL'
-    //                 --prettyPrint''', odcInstallation: 'OWASP Dependency-Check Vulnerabilities'
-    //     dependencyCheckPublisher pattern: 'dependency-check-report.xml'
-    //   }
-    // }
+    stage('OWASP Dependency-Check Vulnerabilities') {
+      steps {
+        dependencyCheck additionalArguments: '''
+                    -o './'
+                    -s './'
+                    -f 'ALL'
+                    --prettyPrint''', odcInstallation: 'OWASP Dependency-Check Vulnerabilities'
+        dependencyCheckPublisher pattern: 'dependency-check-report.xml'
+      }
+    }
 
     // stage('Quality Analysis') {
     //   parallel {
