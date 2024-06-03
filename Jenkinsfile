@@ -39,11 +39,10 @@ pipeline {
     stage('OWASP Dependency-Check Vulnerabilities') {
       steps {
         script {
-          def scanner = tool name: 'OWASP Dependency-Check Vulnerabilities', type: 'org.jenkinsci.plugins.dependencycheck.DependencyCheckBuildStep'
+          def scanner = [$class: 'DependencyCheckBuilder', pattern: 'dependency-check-report.xml']
           def customCache = [$class: 'FileCache', cacheDirectory: 'dependency-check-cache']
           scanner = scanner.getCaches().add(customCache)
           scanner.runScan()
-          step([$class: 'DependencyCheckPublisher', pattern: 'dependency-check-report.xml'])
         }
       }
     }
