@@ -49,6 +49,8 @@ pipeline {
 
     stage('SCA OWASP Dependency-Check') {
       steps {
+        sh 'ls /home/jenkins/ -l' // list the contents of the workspace
+        sh 'ls /home/jenkins/dependency-check/bin/ -l' // list the contents of the workspace
         sh 'home/jenkins/dependency-check/bin/dependency-check.sh --scan . --format "ALL" --project "my-project" --out .'
         archiveArtifacts artifacts: 'dependency-check-report.html'
       }
