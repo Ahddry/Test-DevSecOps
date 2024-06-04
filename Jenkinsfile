@@ -14,7 +14,6 @@ pipeline {
     // The following variable is required for a Semgrep AppSec Platform-connected scan:
     // 6a24fa008adf86f8a2ba70af6d82f91cec39c91e032b6d934534b51e08a40ef0
     SEMGREP_APP_TOKEN = credentials('SEMGREP_APP_TOKEN')
-    NVD_CREDENTIALS = credentials('NVD_CREDENTIALS')
   }
 
   stages {
@@ -37,16 +36,24 @@ pipeline {
     //   }
     // }
 
-    stage('OWASP Dependency-Check Vulnerabilities') {
+    // stage('OWASP Dependency-Check Vulnerabilities') {
+    //   steps {
+    //     dependencyCheck additionalArguments: '''
+    //                 -o './'
+    //                 -s './'
+    //                 -f 'ALL'
+    //                 --prettyPrint''', odcInstallation: 'OWASP Dependency-Check Vulnerabilities'
+    //     dependencyCheckPublisher pattern: 'dependency-check-report.xml'
+    //   }
+    // }
+
+    stage('SCA OWASP Dependency-Check') {
       steps {
-        dependencyCheck additionalArguments: '''
-                    -o './'
-                    -s './'
-                    -f 'ALL'
-                    --prettyPrint''', odcInstallation: 'OWASP Dependency-Check Vulnerabilities', nvdCredentialsId: 'ff72d7cd-64ab-47f8-9642-de6d294468ab'
-        dependencyCheckPublisher pattern: 'dependency-check-report.xml'
+        sh './dependency-check/bin/dependency-check.sh --scan . --format "ALL" --project "my-project" --out .'
+        archiveArtifacts artifacts: 'dependency-check-report.html'
       }
     }
+
 
     // stage('Quality Analysis') {
     //   parallel {
