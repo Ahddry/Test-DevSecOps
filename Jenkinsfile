@@ -5,14 +5,7 @@ pipeline {
     }
   }
 
-//   // using the Timestamper plugin we can add timestamps to the console log
-//   options {
-//     timestamps()
-//   }
-
   environment {
-    // The following variable is required for a Semgrep AppSec Platform-connected scan:
-    // 6a24fa008adf86f8a2ba70af6d82f91cec39c91e032b6d934534b51e08a40ef0
     SEMGREP_APP_TOKEN = credentials('SEMGREP_APP_TOKEN')
   }
 
@@ -55,6 +48,30 @@ pipeline {
         sh '/home/jenkins/dependency-check/bin/dependency-check.sh --scan . --format "ALL" --project "my-project" --out .'
         archiveArtifacts artifacts: 'dependency-check-report.html'
         dependencyCheckPublisher pattern: 'dependency-check-report.xml'
+      }
+    }
+
+    stage('Block pipeline if there are critical vulnerabilities') {
+      steps {
+        script {
+          def semgrepReport = readFile 'semgrep.json'
+          if (semgrepReport.contains('severity": "error')) {
+            error 'There are critical vulnerabilities in the code of the project'
+          }
+          def odcReport = readFile 'dependency-check-report.json'
+          if (odcReport.contains('Severity: critical')) {
+            error 'There are critical vulnerabilities in the dependencies of the project'
+          }
+        }
+      }
+    }
+
+    stage('Publish reports to external storage')
+    {
+      steps {
+        script {
+          // send the reports to an S3 bucket
+        }
       }
     }
   }
