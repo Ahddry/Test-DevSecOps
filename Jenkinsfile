@@ -26,15 +26,16 @@ pipeline {
         }
     }
 
-    // stage('Semgrep-Scan') {
-    //     steps {
-    //       // sh 'pip3 install semgrep'
-    //       // sh 'python3 -m pip install semgrep'
-    //       // sh 'semgrep ci --text --json-output=semgrep.json'
-    //       sh 'semgrep scan --config auto --text --json-output=semgrep.json'
-    //       sh 'cat semgrep.json'
-    //   }
-    // }
+    stage('Semgrep-Scan') {
+        steps {
+          // sh 'pip3 install semgrep'
+          // sh 'python3 -m pip install semgrep'
+          // sh 'semgrep ci --text --json-output=semgrep.json'
+          sh 'semgrep scan --config auto --text --json-output=semgrep.json'
+          sh 'cat semgrep.json'
+          archiveArtifacts artifacts: 'semgrep.json'
+      }
+    }
 
     // stage('OWASP Dependency-Check Vulnerabilities') {
     //   steps {
@@ -53,53 +54,7 @@ pipeline {
         sh 'ls /home/jenkins/dependency-check/bin/ -l' // list the contents of the workspace
         sh '/home/jenkins/dependency-check/bin/dependency-check.sh --scan . --format "ALL" --project "my-project" --out .'
         archiveArtifacts artifacts: 'dependency-check-report.html'
-      }
-    }
-
-
-    // stage('Quality Analysis') {
-    //   parallel {
-    //     // run Sonar Scan and Integration tests in parallel. This syntax requires Declarative Pipeline 1.2 or higher
-    //     stage ('Integration Test') {
-    //       agent any  //run this stage on any available agent
-    //       steps {
-    //         echo 'Run integration tests here...'
-    //       }
-    //     }
-    //     stage('Sonar Scan') {
-    //       agent {
-    //         docker {
-    //           // we can use the same image and workspace as we did previously
-    //           reuseNode true
-    //           image 'maven:3.5.0-jdk-8'
-    //         }
-    //       }
-    //       environment {
-    //         //use 'sonar' credentials scoped only to this stage
-    //         SONAR = credentials('sonar')
-    //       }
-    //       steps {
-    //         sh 'mvn sonar:sonar -Dsonar.login=$SONAR_PSW'
-    //       }
-    //     }
-    //   }
-    // }
-
-    stage('Build and Publish Image') {
-      when {
-        branch 'master'  //only run these steps on the master branch
-      }
-      steps {
-        // /*
-        //  * Multiline strings can be used for larger scripts. It is also possible to put scripts in your shared library
-        //  * and load them with 'libaryResource'
-        //  */
-        // sh """
-        //   docker build -t ${IMAGE} .
-        //   docker tag ${IMAGE} ${IMAGE}:${VERSION}
-        //   docker push ${IMAGE}:${VERSION}
-        // """
-        echo 'Building and publishing image...'
+        dependencyCheckPublisher pattern: 'dependency-check-report.xml'
       }
     }
   }
