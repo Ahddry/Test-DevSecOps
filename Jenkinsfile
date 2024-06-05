@@ -23,7 +23,6 @@ pipeline {
     stage('Semgrep-Scan') {
         steps {
           sh 'semgrep scan --config auto --text --json-output=semgrep.json'
-          sh 'cat semgrep.json'
           archiveArtifacts artifacts: 'semgrep.json'
       }
     }
@@ -61,6 +60,11 @@ pipeline {
           def odcReport = readFile 'dependency-check-report.json'
           // publish reports to external storage
           echo 'Publishing reports to external storage..'
+          def awsS3 = [:]
+          awsS3['files'] = 'dependency-check-report.xml' // Remplace avec le nom de ton fichier de rapport
+          awsS3['bucket'] = 'test-devsecops-op-jenkins '
+          awsS3['path'] = '${env.BUILD_ID}' // Optionnel : spécifie un chemin dans le bucket
+          awsS3Upload(awsS3)
         }
       }
     }
