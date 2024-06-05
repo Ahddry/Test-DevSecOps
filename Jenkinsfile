@@ -41,10 +41,12 @@ pipeline {
         script {
           def semgrepReport = readFile 'semgrep.json'
           if (semgrepReport.contains('severity": "error')) {
+            echo 'There are critical vulnerabilities in the code of the project! Blocking the pipeline..'
             error 'There are critical vulnerabilities in the code of the project'
           }
           def odcReport = readFile 'dependency-check-report.html'
           if (odcReport.contains('Severity: critical')) {
+            echo 'There are critical vulnerabilities in the dependencies of the project! Blocking the pipeline..'
             error 'There are critical vulnerabilities in the dependencies of the project'
           }
         }
