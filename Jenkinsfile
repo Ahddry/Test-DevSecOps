@@ -70,7 +70,10 @@ pipeline {
     {
       steps {
         script {
-          // send the reports to an S3 bucket
+          def semgrepReport = readFile 'semgrep.json'
+          def odcReport = readFile 'dependency-check-report.json'
+          // publish reports to external storage
+          echo 'Publishing reports to external storage..'
         }
       }
     }
