@@ -1,5 +1,9 @@
 pipeline {
-  agent any
+  agent {
+    node {
+      label 'docker-agent'
+    }
+  }
 
   environment {
     SEMGREP_APP_TOKEN = credentials('SEMGREP_APP_TOKEN')
