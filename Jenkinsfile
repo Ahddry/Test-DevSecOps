@@ -22,7 +22,7 @@ pipeline {
         steps {
           sh 'semgrep scan --config auto --json -o semgrep.json'
           archiveArtifacts artifacts: 'semgrep.json'
-          sh 'visu-semgrep-ci -cflo semgrep.json'
+          sh './visu-semgrep-ci semgrep.json'
       }
     }
 
