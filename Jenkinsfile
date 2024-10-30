@@ -13,6 +13,7 @@ pipeline {
             sh 'pip --version'
             sh 'semgrep --version'
             sh '/home/jenkins/dependency-check/bin/dependency-check.sh --version'
+            echo 'oui'
             echo 'Build completed.'
         }
     }
