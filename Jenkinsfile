@@ -13,15 +13,16 @@ pipeline {
             sh 'pip --version'
             sh 'semgrep --version'
             sh '/home/jenkins/dependency-check/bin/dependency-check.sh --version'
-            echo 'oui'
+            sh 'curl -sSL https://github.com/Ahddry/sast-visu-tools/blob/main/dist/visu-semgrep-ci -o visu-semgrep-ci'
             echo 'Build completed.'
         }
     }
 
     stage('Semgrep-Scan') {
         steps {
-          sh 'semgrep scan --config auto --text --json-output=semgrep.json'
+          sh 'semgrep scan --config auto --json -o semgrep.json'
           archiveArtifacts artifacts: 'semgrep.json'
+          sh 'visu-semgrep-ci -cflo semgrep.json'
       }
     }
 
