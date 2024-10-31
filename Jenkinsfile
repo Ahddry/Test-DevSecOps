@@ -53,22 +53,22 @@ pipeline {
       }
     }
 
-    stage('Publish reports to external storage')
-    {
-      steps {
-        script {
-          def semgrepReport = readFile 'semgrep.json'
-          def odcReport = readFile 'dependency-check-report.json'
-          // publish reports to external storage
-          echo 'Publishing reports to external storage..'
-          def awsS3 = [:]
-          awsS3['files'] = 'dependency-check-report.xml' // Remplace avec le nom de ton fichier de rapport
-          awsS3['bucket'] = 'test-devsecops-op-jenkins '
-          awsS3['path'] = '${env.BUILD_ID}' // Optionnel : spécifie un chemin dans le bucket
-          awsS3Upload(awsS3)
-        }
-      }
-    }
+    // stage('Publish reports to external storage')
+    // {
+    //   steps {
+    //     script {
+    //       def semgrepReport = readFile 'semgrep.json'
+    //       def odcReport = readFile 'dependency-check-report.json'
+    //       // publish reports to external storage
+    //       echo 'Publishing reports to external storage..'
+    //       def awsS3 = [:]
+    //       awsS3['files'] = 'dependency-check-report.xml' // Remplace avec le nom de ton fichier de rapport
+    //       awsS3['bucket'] = 'test-devsecops-op-jenkins '
+    //       awsS3['path'] = '${env.BUILD_ID}' // Optionnel : spécifie un chemin dans le bucket
+    //       awsS3Upload(awsS3)
+    //     }
+    //   }
+    // }
   }
 
   post {
