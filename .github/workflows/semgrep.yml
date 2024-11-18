@@ -35,3 +35,13 @@ jobs:
               # Run Semgrep with the custom ruleset.
               run: |
                   ./semgrep-custom.sh
+            - name: Zip the folder
+              run: |
+                  folder=$(ls -d 20*/)
+                  zip -r output.zip "$folder"
+
+            - name: Upload artifact
+              uses: actions/upload-artifact@v3
+              with:
+                  name: semgrep-results
+                  path: output.zip
