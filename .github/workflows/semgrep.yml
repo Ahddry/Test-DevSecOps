@@ -42,7 +42,7 @@ jobs:
             - name: Run custom Semgrep
               # Run the custom instance of Semgrep with the custom ruleset.
               run: |
-                  ./semgrep-custom.sh
+                  ./semgrep-custom.sh . .
             - name: Zip the folder
               run: |
                   folder=$(ls -d 20*/)
