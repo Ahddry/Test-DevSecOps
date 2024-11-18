@@ -44,6 +44,7 @@ jobs:
               # Run the custom instance of Semgrep with the custom ruleset.
               run: |
                   sleep 5
+                  ls -al
                   ./semgrep-custom . .
             - name: Zip the folder
               run: |
