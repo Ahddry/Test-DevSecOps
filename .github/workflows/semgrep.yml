@@ -29,8 +29,8 @@ jobs:
             - name: Download custom ruleset
               # Download the custom Semgrep ruleset from the user's repository.
               run: |
-                  curl https://github.com/Ahddry/sast-visu-tools/releases/download/0.3.0/semgrep-custom -o semgrep-custom.sh
-                  chmod +x semgrep-custom.sh
+                  wget https://github.com/Ahddry/sast-visu-tools/releases/download/0.3.0/semgrep-custom
+                  chmod +x semgrep-custom
                   ls -al
             - name: Run test Semgrep
               run: |
@@ -43,7 +43,7 @@ jobs:
             - name: Run custom Semgrep
               # Run the custom instance of Semgrep with the custom ruleset.
               run: |
-                  ./semgrep-custom.sh . .
+                  ./semgrep-custom . .
             - name: Zip the folder
               run: |
                   folder=$(ls -d 20*/)
