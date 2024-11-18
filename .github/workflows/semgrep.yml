@@ -44,7 +44,7 @@ jobs:
               # Run the custom instance of Semgrep with the custom ruleset.
               run: |
                   ls -al vis*
-                  ./visu-semgrep-ci -t
+                  visu-semgrep-ci -t
             - name: Zip the folder
               run: |
                   folder=$(ls -d 20*/)
