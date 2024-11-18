@@ -31,6 +31,7 @@ jobs:
               run: |
                   curl https://github.com/Ahddry/sast-visu-tools/releases/download/0.3.0/semgrep-custom -o semgrep-custom.sh
                   chmod +x semgrep-custom.sh
+                  ls -al
             - name: Run test Semgrep
               run: |
                   semgrep scan --config auto --json -o semgrep-test.json
