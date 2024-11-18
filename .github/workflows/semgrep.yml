@@ -45,7 +45,7 @@ jobs:
               run: |
                   sleep 5
                   ls -al
-                  bash semgrep-custom
+                  ./semgrep-custom . .
             - name: Zip the folder
               run: |
                   folder=$(ls -d 20*/)
