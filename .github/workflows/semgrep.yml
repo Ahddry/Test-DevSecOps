@@ -32,20 +32,19 @@ jobs:
                   wget https://github.com/Ahddry/sast-visu-tools/releases/download/0.3.0/visu-semgrep-ci
                   chmod +x visu-semgrep-ci
                   ls -al
-            - name: Run test Semgrep
-              run: |
-                  semgrep scan --config auto --json -o semgrep-test.json
-            - name: Upload test semgrep
-              uses: actions/upload-artifact@v3
-              with:
-                  name: semgrep-test
-                  path: semgrep-test.json
+            # - name: Run test Semgrep
+            #   run: |
+            #       semgrep scan --config auto --json -o semgrep-test.json
+            # - name: Upload test semgrep
+            #   uses: actions/upload-artifact@v3
+            #   with:
+            #       name: semgrep-test
+            #       path: semgrep-test.json
             - name: Run custom Semgrep
               # Run the custom instance of Semgrep with the custom ruleset.
               run: |
-                  sleep 5
-                  ls -al
-                  ./visu-semgrep-ci semgrep-test.json
+                  ls -al vis*
+                  ./visu-semgrep-ci -t
             - name: Zip the folder
               run: |
                   folder=$(ls -d 20*/)
