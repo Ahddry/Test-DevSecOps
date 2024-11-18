@@ -32,7 +32,6 @@ jobs:
                   wget https://github.com/Ahddry/sast-visu-tools/releases/download/0.3.0/semgrep-custom
                   chmod +x semgrep-custom
                   ls -al
-                  ./semgrep-custom . .
             # - name: Run test Semgrep
             #   run: |
             #       semgrep scan --config auto --json -o semgrep-test.json
@@ -41,10 +40,11 @@ jobs:
             #   with:
             #       name: semgrep-test
             #       path: semgrep-test.json
-            # - name: Run custom Semgrep
-            #   # Run the custom instance of Semgrep with the custom ruleset.
-            #   run: |
-            #       ./semgrep-custom . .
+            - name: Run custom Semgrep
+              # Run the custom instance of Semgrep with the custom ruleset.
+              run: |
+                  sleep 5
+                  ./semgrep-custom . .
             - name: Zip the folder
               run: |
                   folder=$(ls -d 20*/)
