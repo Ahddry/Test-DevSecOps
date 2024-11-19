@@ -34,7 +34,7 @@ jobs:
                   visu-semgrep-ci -t
             - name: ignore specific files
               run: |
-                  echo ".*" > .semgrepignore"
+                  echo ".*" > ".semgrepignore"
                   ls -al
             - name: Run Semgrep
               run: semgrep-custom . .
