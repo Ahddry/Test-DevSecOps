@@ -26,12 +26,6 @@ jobs:
         steps:
             # Fetch project source with GitHub Actions Checkout. Use either v3 or v4.
             - uses: actions/checkout@v4
-            - name: Download custom ruleset
-              # Download the custom Semgrep ruleset from the user's repository.
-              run: |
-                  wget https://github.com/Ahddry/sast-visu-tools/releases/download/0.3.0/visu-semgrep-ci
-                  chmod +x visu-semgrep-ci
-                  ls -al
             # - name: Run test Semgrep
             #   run: |
             #       semgrep scan --config auto --json -o semgrep-test.json
@@ -40,9 +34,18 @@ jobs:
             #   with:
             #       name: semgrep-test
             #       path: semgrep-test.json
+            - name: Download custom ruleset
+              run: |
+                  wget https://github.com/Ahddry/sast-visu-tools/releases/download/0.3.0/visu-semgrep-ci
+                  chmod +x visu-semgrep-ci
+                  ls -al
+            - name: Debugging
+              run: |
+                  pwd
+                  ls -al
+                  file visu-semgrep-ci
             - name: Run custom Semgrep
-              # Run the custom instance of Semgrep with the custom ruleset.
-              run: ./visu-semgrep-ci -t
+              run: $(pwd)/visu-semgrep-ci -t
             - name: Zip the folder
               run: |
                   folder=$(ls -d 20*/)
