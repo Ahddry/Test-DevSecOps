@@ -28,14 +28,6 @@ jobs:
         steps:
             # Fetch project source with GitHub Actions Checkout. Use either v3 or v4.
             - uses: actions/checkout@v4
-            # - name: Run test Semgrep
-            #   run: |
-            #       semgrep scan --config auto --json -o semgrep-test.json
-            # - name: Upload test semgrep
-            #   uses: actions/upload-artifact@v3
-            #   with:
-            #       name: semgrep-test
-            #       path: semgrep-test.json
             - name: Verify installed tools
               run: |
                   semgrep --version
@@ -46,13 +38,13 @@ jobs:
                   ls -al
             - name: Run custom Semgrep
               run: semgrep-custom . .
-            - name: Zip the folder
-              run: |
-                  folder=$(ls -d 20*/)
-                  zip -r output.zip "$folder"
-
-            - name: Upload artifact
-              uses: actions/upload-artifact@v3
+            - name: Upload semgrep artifact
+              uses: actions/upload-artifact@v4
               with:
                   name: semgrep-results
-                  path: output.zip
+                  path: semgrep-report.json
+            - name: Upload report summary
+              uses: actions/upload-artifact@v4
+              with:
+                  name: report-summary
+                  path: semgrep-results-summary.txt
