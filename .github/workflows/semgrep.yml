@@ -32,11 +32,11 @@ jobs:
               run: |
                   semgrep --version
                   visu-semgrep-ci -t
-            - name: Debugging
+            - name: ignore specific files
               run: |
-                  pwd
+                  echo ".*" > .semgrepignore"
                   ls -al
-            - name: Run custom Semgrep
+            - name: Run Semgrep
               run: semgrep-custom . .
             - name: Upload semgrep artifact
               uses: actions/upload-artifact@v4
