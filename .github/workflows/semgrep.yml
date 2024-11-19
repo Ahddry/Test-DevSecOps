@@ -35,6 +35,7 @@ jobs:
             - name: ignore specific files
               run: |
                   echo ".*" > ".semgrepignore"
+                  echo "!.semgrepignore" >> ".semgrepignore"
                   ls -al
             - name: Run Semgrep
               run: semgrep-custom . .
