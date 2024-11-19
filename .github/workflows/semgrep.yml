@@ -18,7 +18,9 @@ jobs:
 
         container:
             # A Docker image with Semgrep installed. Do not change this.
-            image: semgrep/semgrep
+            # image: semgrep/semgrep
+            # A custom Docker image with Semgrep installed.
+            image: ahddry/semgrep-custom:latest
 
         # Skip any PR created by dependabot to avoid permission issues:
         if: (github.actor != 'dependabot[bot]')
@@ -34,18 +36,16 @@ jobs:
             #   with:
             #       name: semgrep-test
             #       path: semgrep-test.json
-            - name: Download custom ruleset
+            - name: Verify installed tools
               run: |
-                  wget https://github.com/Ahddry/sast-visu-tools/releases/download/0.3.0/visu-semgrep-ci
-                  chmod +x visu-semgrep-ci
-                  ls -al
+                  semgrep --version
+                  visu-semgrep-ci -t
             - name: Debugging
               run: |
                   pwd
                   ls -al
-                  head -c 20 visu-semgrep-ci | xxd
             - name: Run custom Semgrep
-              run: $(pwd)/visu-semgrep-ci -t
+              run: semgrep-custom . .
             - name: Zip the folder
               run: |
                   folder=$(ls -d 20*/)
