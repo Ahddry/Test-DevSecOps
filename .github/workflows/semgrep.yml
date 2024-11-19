@@ -42,10 +42,7 @@ jobs:
             #       path: semgrep-test.json
             - name: Run custom Semgrep
               # Run the custom instance of Semgrep with the custom ruleset.
-              run: |
-                  ls -al vis*
-                  mv visu-semgrep-ci /usr/local/bin
-                  visu-semgrep-ci -t
+              run: ./visu-semgrep-ci -t
             - name: Zip the folder
               run: |
                   folder=$(ls -d 20*/)
