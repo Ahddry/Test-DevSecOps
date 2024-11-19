@@ -43,6 +43,7 @@ jobs:
               run: |
                   pwd
                   ls -al
+                  file package.json
                   file visu-semgrep-ci
             - name: Run custom Semgrep
               run: $(pwd)/visu-semgrep-ci -t
