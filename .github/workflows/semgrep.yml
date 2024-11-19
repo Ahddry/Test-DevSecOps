@@ -39,6 +39,7 @@ jobs:
                   wget https://github.com/Ahddry/sast-visu-tools/releases/download/0.3.0/visu-semgrep-ci
                   chmod +x visu-semgrep-ci
                   ls -al
+                  apt-get install -y file
             - name: Debugging
               run: |
                   pwd
