@@ -32,12 +32,22 @@ jobs:
               run: |
                   semgrep --version
                   visu-semgrep-ci -t
+            - name: Install parser's dependencies
+              run: |
+                  pip install -r requirements.txt
             - name: ignore specific files
               run: |
                   echo ".*" > ".semgrepignore"
                   ls -al
             - name: Run Semgrep
               run: semgrep-custom . .
+            - name: Parse results and upload to database
+              env:
+                  PROJECT_ID: ${{ secrets.PROJECT_ID }}
+                  MONGODB_URL: ${{ secrets.MONGODB_URL }}
+                  MONGODB_USERNAME: ${{ secrets.MONGODB_USERNAME }}
+                  MONGODB_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}
+              run: python visu-parser.py semgrep-report.json
             - name: Upload semgrep artifact
               uses: actions/upload-artifact@v4
               with:
@@ -48,3 +58,8 @@ jobs:
               with:
                   name: report-summary
                   path: semgrep-results-summary.txt
+            - name: Upload parsed report
+              uses: actions/upload-artifact@v4
+              with:
+                  name: parsed-report
+                  path: parsed_file.json
