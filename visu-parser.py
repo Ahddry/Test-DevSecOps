@@ -185,8 +185,9 @@ def process_new_report_results(report: Dict[str, Any], previous_report: Dict[str
         existing_result = next((prev_result for prev_result in previous_report['report']['results'] if compare_results(prev_result, result)), None)
         result['new'] = not existing_result
         if existing_result:
-            result['extra']['first_seen'] = existing_result['extra']['first_seen']
-            result['extra']['first_seen_report_number'] = existing_result['extra']['first_seen_report_number']
+            if existing_result['extra']['first_seen']:
+                result['extra']['first_seen'] = existing_result['extra']['first_seen']
+            result['extra']['first_seen_report_number'] = existing_result['extra'].get('first_seen_report_number', report['report_number'] - 1)
             if existing_result['extra']['is_ignored']:
                 result['extra']['is_ignored'] = True
     print("Results processed, calculating new, fixed, and ignored findings")
