@@ -9,6 +9,8 @@ on:
     # Scan mainline branches and report all findings:
     push:
         branches: ["master", "main"]
+    schedule:
+        - cron: "0 0 */2 * *"
 jobs:
     semgrep:
         # User definable name of this GitHub Actions job.
