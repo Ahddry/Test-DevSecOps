@@ -10,7 +10,7 @@ on:
     push:
         branches: ["master", "main"]
     schedule:
-        - cron: "0 0 */2 * *"
+        - cron: "0 0 */5 * *"
 jobs:
     semgrep:
         # User definable name of this GitHub Actions job.
