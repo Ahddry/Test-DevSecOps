@@ -21,9 +21,8 @@ pipeline {
 
     stage('Semgrep-Scan') {
         steps {
-          sh 'semgrep scan --config auto --json -o semgrep.json'
-          archiveArtifacts artifacts: 'semgrep.json'
-          sh 'visu-semgrep-ci -cflo semgrep.json'
+          sh 'semgrep-custom . .'
+          archiveArtifacts artifacts: 'semgrep-report.json'
           archiveArtifacts artifacts: 'semgrep-results-summary.txt'
       }
     }
