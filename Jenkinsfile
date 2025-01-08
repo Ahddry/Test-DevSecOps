@@ -28,7 +28,7 @@ pipeline {
 
     stage('SCA OWASP Dependency-Check') {
       steps {
-        sh '/home/jenkins/dependency-check/bin/dependency-check.sh --scan . --format "ALL" --project "my-project" --out .'
+        sh '/home/jenkins/dependency-check/bin/dependency-check.sh --scan . --format "ALL" --out .'
         archiveArtifacts artifacts: 'dependency-check-report.html'
         dependencyCheckPublisher pattern: 'dependency-check-report.xml'
       }
