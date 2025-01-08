@@ -14,7 +14,6 @@ pipeline {
             sh 'semgrep --version'
             sh '/home/jenkins/dependency-check/bin/dependency-check.sh --version'
             sh 'ls -l /usr/local/bin/'
-            sh 'visu-semgrep-ci -t'
             echo 'Build completed.'
         }
     }
