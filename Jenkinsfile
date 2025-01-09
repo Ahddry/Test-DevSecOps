@@ -37,7 +37,7 @@ pipeline {
     stage('Block pipeline if there are critical vulnerabilities') {
       steps {
         script {
-          def semgrepReport = readFile 'semgrep.json'
+          def semgrepReport = readFile 'semgrep-report.json'
           if (semgrepReport.contains('severity": "error')) {
             echo 'There are critical vulnerabilities in the code of the project! Blocking the pipeline..'
             error 'There are critical vulnerabilities in the code of the project'
