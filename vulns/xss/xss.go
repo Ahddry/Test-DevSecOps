@@ -26,16 +26,17 @@ func (self XSS)SetRouter(r *httprouter.Router){
 	r.GET("/xss1", mw.LoggingMiddleware(mw.CapturePanic(mw.AuthCheck(xss1Handler))))
 	r.POST("/xss1", mw.LoggingMiddleware(mw.CapturePanic(mw.AuthCheck(xss1Handler))))
 	r.GET("/xss2", mw.LoggingMiddleware(mw.CapturePanic(mw.AuthCheck(xss2Handler))))
+	r.POST("/xss2", mw.LoggingMiddleware(mw.CapturePanic(mw.AuthCheck(xss2Handler))))
 }
 
 func xss1Handler(w http.ResponseWriter, r *http.Request, _ httprouter.Params){
-	
+
 	/* template.HTML is a vulnerable function */
-	
+
 	data := make(map[string]interface{})
 
 	if r.Method == "GET"{
-		
+
 		term := r.FormValue("term")
 
 		if(util.CheckLevel(r)){ //level = high
@@ -45,7 +46,7 @@ func xss1Handler(w http.ResponseWriter, r *http.Request, _ httprouter.Params){
 		if term == "sql injection"{
 			term = "sqli"
 		}
-		
+
 		term = removeScriptTag(term)
 		vulnDetails := GetExp(term)
 
@@ -74,4 +75,32 @@ func removeScriptTag(text string)string{
 	filter := regexp.MustCompile("<script*>.*</script>")
 	output := filter.ReplaceAllString(text,"")
 	return output
+}
+func sqli2Handler(w http.ResponseWriter, r *http.Request, _ httprouter.Params){
+
+	uid := r.FormValue("uid")
+
+	p := NewProfile()
+
+	data := make(map[string]interface{}) //data to send to client
+
+	if(!util.CheckLevel(r)){ //level == low
+		err := p.UnsafeQueryGetData(uid)
+		if err != nil{
+			log.Printf("sql error")
+		}
+	}else{
+		err := p.SafeQueryGetData(uid)
+		if err != nil{
+			data["error"] = "No Data Found"
+			log.Printf("prepare error : %s", err.Error())
+		}
+	}
+
+	data["title"] = "Sql Injection"
+	data["name"] = p.Name
+	data["city"] = p.City
+	data["number"] = p.PhoneNumber
+	util.SafeRender(w,r,"template.sqli2",data)
+
 }
