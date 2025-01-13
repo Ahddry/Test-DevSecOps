@@ -32,14 +32,14 @@ func sqli1Handler(w http.ResponseWriter, r *http.Request, _ httprouter.Params){
 
 	uid := util.GetCookie(r,"Uid")//many developer use this style. set reference key in cookie with no sanitaze
 
-	/*
-	this prevent idor injection but not lead to sql injection
+
+	//this prevent idor injection but not lead to sql injection
 
 	s := session.New()
 	sid := s.GetSession(r, "id")
 	if( sid != uid){
 		uid = sid
-	} */
+	}
 
 	p := NewProfile()
 
