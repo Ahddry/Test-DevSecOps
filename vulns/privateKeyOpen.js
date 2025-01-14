@@ -26,7 +26,7 @@ console.log("Decrypted data:", decryptedData);
 
 http.createServer((req, res) => {
     res.writeHead(200, {
-        "Set-Cookie": "sessionId=abc123; aaa; httpOnly;",
+        "sessionId=abc123; access_token=eyJraWQiOiJkZWZhdWx0LWdyYXZpdGVlLUFNLWtleSIsInR5cCI6IkpXVCIsImFsZyI6IkhTMjU2In0.eyJzdWIiOiIyMjdjMjgzNS05ODlmLTQ0ODYtYmMyOC0zNTk4OWY5NDg2ZjQiLCJhdWQiOiI3YTczNDZmZC1jNDRmLTQ1YmMtYjM0Ni1mZGM0NGYxNWJjZTUiLCJkb21haW4iOiI3MmVjZjVmMy05ZTRjLTQ5OTctYWNmNS1mMzllNGNhOTk3N2QiLCJzY29wZSI6Im9wZW5pZCIsImlzcyI6Imh0dHBzOi8vYW0uZGV2Lm12cC1zZWNyZXQuZnIvYXV0aC91c2Vycy9vaWRjIiwiZXhwIjoxNzg2Nzc3NjQ3LCJpYXQiOjE2NTUyNDE2NDcsImp0aSI6IkNWN2RoYzRlWHBQOE1sempZZFpuMDU5dUVacjJvTG9BN1dFUC1leENUbzAifQ.3k8XlXXh6looDF_ZV5sL7GPdN1wx2sCNOnZvlvLIzoA; httpOnly;",
         "Content-Type": "text/plain",
     });
     res.end("Cookie has been set");
