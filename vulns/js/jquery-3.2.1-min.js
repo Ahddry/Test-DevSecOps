@@ -675,10 +675,10 @@
                             var b = y[a + " "];
                             return (
                                 b ||
-                                ((b = new RegExp("(^|" + K + ")" + a + "(" + K + "|$)")) &&
+                                ((
                                     y(a, function (a) {
                                         return b.test(("string" == typeof a.className && a.className) || ("undefined" != typeof a.getAttribute && a.getAttribute("class")) || "");
-                                    }))
+                                    })))
                             );
                         },
                         ATTR: function (a, b, c) {
