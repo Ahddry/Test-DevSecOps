@@ -38,15 +38,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
-app.use(
-    session({
-        secret: "ñasddfilhpaf78h78032h780g780fg780asg780dsbovncubuyvqy",
-        cookie: {
-            secure: false,
-            maxAge: 99999999999,
-        },
-    })
-);
 
 /*
  * Routes config
