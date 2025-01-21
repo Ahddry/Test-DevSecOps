@@ -34,7 +34,7 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params: { id } }) {
-    const { data: article } = { id: "AZER" };
+    const { data: article } = { data: { id: "1", title: "Premier article", author: "Blair Bon", created_at: new Date().toISOString(), content: "Ceci est le contenu de l'article" } };
     return {
         props: {
             article,

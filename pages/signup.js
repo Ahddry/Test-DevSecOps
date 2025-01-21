@@ -1,6 +1,5 @@
 import Footer from "../components/Footer";
 import Context from "../components/UserContext";
-import { supabase } from "../utils/supabase";
 import Link from "next/link";
 import { useContext, useState, useEffect } from "react";
 import { useRouter } from "next/router";

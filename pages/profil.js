@@ -4,7 +4,6 @@ import Link from "next/link";
 import Image from "next/legacy/image";
 import Context from "../components/UserContext";
 import { useContext, useState, useEffect } from "react";
-import { supabase } from "../utils/supabase";
 import Context2 from "../components/ThemeContext";
 import { FaGithub } from "react-icons/fa";
 import { useRouter } from "next/router";
@@ -271,7 +270,7 @@ function Profil() {
             try {
                 setLoading(true);
                 setError(null);
-                const messages = await supabase.from("contacter").select("*").eq("destinataire", user.id);
+                const messages = [];
                 setMessages(messages.data);
             } catch (error) {
                 setError(error.message);

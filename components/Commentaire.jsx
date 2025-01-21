@@ -1,11 +1,9 @@
 import { useContext, useState } from "react";
-import { supabase } from "../utils/supabase";
 import Context from "../components/UserContext";
 import Context2 from "./ThemeContext";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import Image from "next/legacy/image";
-import { BsStarFill, BsStar } from "react-icons/bs";
 import ReactStars from "react-stars";
 
 function commentaire({ commentaire, isNew, getCloseBoxe }) {
@@ -24,7 +22,7 @@ function commentaire({ commentaire, isNew, getCloseBoxe }) {
     const router = useRouter();
     async function getgravurl() {
         //recupère le gravatard de l'utilisateur qui a publié le msg
-        let { data: gravatard_url, error } = await supabase.from("comptes").select("gravatar_url").eq("id", commentaire.userid);
+        let { data: gravatard_url, error } = null;
         if (error) throw error;
         setGravatrurl(gravatard_url[0].gravatar_url);
     }
@@ -49,19 +47,7 @@ function commentaire({ commentaire, isNew, getCloseBoxe }) {
             try {
                 if (isNew) {
                     //si nouveau commentaire
-                    await supabase
-                        .from("commentaire")
-                        .insert({
-                            titre: titre,
-                            contenue: contenue,
-                            etoile: etoile,
-                            created_at: new Date().toISOString(),
-                            userid: user.id,
-                            projets_id: commentaire.projets_id,
-                        })
-                        .then((response) => {
-                            if (response.error != null) throw response.error;
-                        });
+
                     setTitre("");
                     setContenue("");
                     setEtoile(0);
@@ -70,26 +56,6 @@ function commentaire({ commentaire, isNew, getCloseBoxe }) {
                     router.push("/project/" + commentaire.projets_id);
                     alertMessage = "Commentaire ajouté";
                 } //si modif commmentaire
-                else {
-                    await supabase
-                        .from("commentaire")
-                        .update({
-                            titre: titre,
-                            contenue: contenue,
-                            etoile: etoile,
-                            created_at: new Date().toISOString(),
-                        })
-                        .eq("id", commentaire.id)
-                        .then((response) => {
-                            if (response.error != null) throw response.error;
-                        });
-                    setLoading(false);
-                    alertMessage = "Commentaire modifié";
-                    commentaire.titre = titre;
-                    commentaire.contenue = contenue;
-                    commentaire.etoile = etoile;
-                    commentaire.created_at = new Date().toISOString();
-                }
             } catch (error) {
                 console.log(error);
                 setLoading(false);

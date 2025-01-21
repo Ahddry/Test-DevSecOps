@@ -1,12 +1,17 @@
 import Footer from "../components/Footer";
-import { supabase } from "../utils/supabase";
 import Link from "next/link";
 import { useContext } from "react";
 import Context2 from "../components/ThemeContext";
 
 // Page affichant la liste des articles
-function Articles({ listarticles }) {
+function Articles() {
     const { colour } = useContext(Context2);
+    const listarticles = [
+        {
+            id: "1",
+            title: "Premier article",
+        },
+    ];
     return (
         <section className="flex items-center justify-between flex-col w-full h-screen  bg-background dark:bg-dark_background">
             <div className="p-5 mt-12 min-w-[70%] space-y-5">
@@ -27,14 +32,6 @@ function Articles({ listarticles }) {
             </div>
         </section>
     );
-}
-export async function getStaticProps() {
-    const { data: listarticles } = await supabase.from("articles").select("*");
-    return {
-        props: {
-            listarticles,
-        },
-    };
 }
 
 export default Articles;
