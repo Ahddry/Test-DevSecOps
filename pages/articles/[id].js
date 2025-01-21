@@ -1,5 +1,4 @@
 import Footer from "../../components/Footer";
-import { supabase } from "../../utils/supabase";
 import { useContext } from "react";
 import Context2 from "../../components/ThemeContext";
 
@@ -35,7 +34,7 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params: { id } }) {
-    const { data: article } = await supabase.from("articles").select("*").eq("id", id).single();
+    const { data: article } = { id: "AZER" };
     return {
         props: {
             article,

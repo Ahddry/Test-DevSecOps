@@ -29,63 +29,14 @@ function SignUp() {
             let ok = true;
             setEmail(email.toLowerCase());
             async function createCompte() {
-                const { data, error } = await supabase.from("comptes").select("*").eq("username", username).single();
+                data = null;
                 if (data !== null) {
                     alert("Ce nom d'utilisateur existe déjà");
                     setTryMdp(true);
                     ok = false;
                     if (error) throw error;
                 }
-                const { data2, error2 } = await supabase.from("comptes").select("*").eq("email", email).single();
-                if (!(data2 === null || data2 === undefined)) {
-                    alert("Cette adresse email est déjà utilisée");
-                    ok = false;
-                    if (error2) throw error2;
-                }
-                if (!ok) return;
-                await supabase.auth.signUp({ email, password: mdp }).then(({ data, error }) => {
-                    if (error) {
-                        console.log(error);
-                        ok = false;
-                        alert("Erreur lors de l'inscription");
-                    }
-                });
-                let user = await (await supabase.auth.getUser()).data.user;
-                const hash = md5(email.trim().toLowerCase());
-                const gravatar = `https://2.gravatar.com/avatar/${hash}?d=identicon`;
-
-                let { error3 } = await supabase.from("comptes").insert({
-                    id: user.id,
-                    created_at: user.created_at,
-                    username: username,
-                    firstname: firstname,
-                    lastname: lastname,
-                    email: email,
-                    password: mdp,
-                    is_admin: false,
-                    gravatar_url: gravatar,
-                });
-                if (error3) throw error3;
-                else if (ok) {
-                    alert("Inscription réussie");
-                    let user = (await supabase.auth.getUser()).data.user;
-                    await login({
-                        id: user.id,
-                        created_at: user.created_at,
-                        username: username,
-                        firstname: firstname,
-                        lastname: lastname,
-                        email: email,
-                        password: mdp,
-                        admin: false,
-                        gravatarurl: gravatar,
-                        colour: "default",
-                        origin: "username/password",
-                    });
-                    router.push("/");
-                }
             }
-            createCompte();
         } catch (error) {
             console.log(error);
             alert("Erreur lors de l'inscription");

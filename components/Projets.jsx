@@ -1,5 +1,4 @@
 import CarteProjet from "./CarteProjet";
-import { supabase } from "../utils/supabase";
 import { useState, useEffect, useContext } from "react";
 import Context from "./UserContext";
 import Context2 from "../components/ThemeContext";
@@ -12,9 +11,7 @@ function Projets({ userid, target }) {
     const [listprojets, setlistporjets] = useState([]);
     useEffect(() => {
         async function getprojets() {
-            let { data: projets, error } = await supabase.from("projets").select("name,language,listeimage,id").eq("auteur", userid);
-            if (error) throw error;
-            setlistporjets(projets);
+            setlistporjets([]);
         }
         getprojets();
     }, [userid]);

@@ -2,7 +2,6 @@ import Footer from "../../components/Footer";
 import MiniCarteLangage from "../../components/MiniCarteLangage";
 import Image from "next/legacy/image";
 import Commentaire from "../../components/Commentaire";
-import { supabase } from "../../utils/supabase";
 import { useState, useContext, useEffect } from "react";
 import Context from "../../components/UserContext";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
@@ -99,15 +98,6 @@ function ProjectPage({ projet, commentaire }) {
     };
     const handleDelete = () => {
         if (confirm("Voulez-vous supprimer votre projet ?")) {
-            async function deleteProjet() {
-                try {
-                    await supabase.from("projets").delete().match({ id: projet.id });
-                    if (error) throw error;
-                } catch (error) {
-                    console.log(error);
-                }
-            }
-            deleteProjet();
             router.push("/");
         }
     };
@@ -122,13 +112,6 @@ function ProjectPage({ projet, commentaire }) {
                         listimagetupush.push(images[i]);
                     } else {
                         console.log("Image pas en ligne", images[i]);
-                        await supabase.storage
-                            .from("projetsimage")
-                            .upload(`${projet.id}/${uploadImage[i].name}`, uploadImage[i])
-                            .then((response) => {
-                                if (response.error != null) throw response.error;
-                            });
-                        listimagetupush.push(`https://mldxyasghmmynjxewzuv.supabase.co/storage/v1/object/public/projetsimage/${projet.id}/${uploadImage[i].name}`);
                     }
                 }
                 let listlangueuseinprj = [];
@@ -137,13 +120,6 @@ function ProjectPage({ projet, commentaire }) {
                         listlangueuseinprj.push(listLanguage[i]);
                     }
                 }
-                await supabase
-                    .from("projets")
-                    .update({ name: titre, description: description, language: listlangueuseinprj, listeimage: listimagetupush, github: github, participants: contributeur })
-                    .match({ id: projet.id })
-                    .then((response) => {
-                        if (response.error != null) throw response.error;
-                    });
                 projet.name = titre;
                 projet.description = description;
                 projet.language = listlangueuseinprj;

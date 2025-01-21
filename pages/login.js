@@ -2,7 +2,6 @@ import Footer from "../components/Footer";
 import Context from "../components/UserContext";
 import { useContext, useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { supabase } from "../utils/supabase";
 import Link from "next/link";
 import Context2 from "../components/ThemeContext";
 import { FaGithub } from "react-icons/fa";

@@ -27,15 +27,7 @@ function Profil() {
         updateColour(col);
         try {
             setLoading(true);
-            async function editColour() {
-                if (user) {
-                    if (col != user.colour) {
-                        const { data, error } = await supabase.from("comptes").update({ colour: col }).eq("id", user.id);
-                        user.colour = col;
-                        if (error) throw error;
-                    }
-                }
-            }
+
             editColour();
         } catch (error) {
             console.log(error);
@@ -70,36 +62,7 @@ function Profil() {
                 setLoading(true);
                 let ok = true;
                 setEmail(email.toLowerCase());
-                async function createCompte() {
-                    if (username != user.username && username != "") {
-                        const { data, error } = await supabase.from("comptes").select("*").eq("username", username).single();
-                        if (data !== null) {
-                            alert("Ce nom d'utilisateur existe déjà");
-                            setTryMdp(true);
-                            ok = false;
-                            if (error) throw error;
-                        }
-                    }
-                    if (!ok) return;
-                    if (username != user.username && username != "") {
-                        await supabase.from("comptes").update({ username: username }).eq("id", user.id);
-                        user.username = username;
-                    }
-                    if (firstname != user.firstname && firstname != "") {
-                        await supabase.from("comptes").update({ firstname: firstname }).eq("id", user.id);
-                        user.firstname = firstname;
-                    }
-                    if (lastname != user.lastname && lastname != "") {
-                        const res = await supabase.from("comptes").update({ lastname: lastname }).eq("id", user.id);
-                        user.lastname = lastname;
-                    }
 
-                    if (ok) {
-                        alert("Vos informations ont bien été modifiées");
-                        setEdit(false);
-                        router.push("/profil");
-                    }
-                }
                 createCompte();
             } catch (error) {
                 console.log(error);

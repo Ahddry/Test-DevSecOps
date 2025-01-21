@@ -1,5 +1,4 @@
 import { useState, useContext } from "react";
-import { supabase } from "../utils/supabase.js";
 import Context2 from "./ThemeContext.jsx";
 
 // Formulaire de contact
@@ -47,15 +46,7 @@ function Contacter({ target }) {
 
         async function insertContact(contact) {
             try {
-                setLoading(true);
-                let { error } = await supabase.from("contacter").insert({
-                    email: contact.email,
-                    sujet: contact.sujet,
-                    message: contact.message,
-                    date: contact.date,
-                    destinataire: contact.destinataire,
-                });
-                if (error) throw error;
+                console.log("oui");
             } catch (error) {
                 alert("Erreur lors de l'envoi du message");
                 console.log("erreur : ", error);

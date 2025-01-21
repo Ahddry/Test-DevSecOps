@@ -1,5 +1,4 @@
 import { createContext, useState, useEffect } from "react";
-import { supabase } from "../utils/supabase";
 
 // Contexte de l'utilisateur
 
