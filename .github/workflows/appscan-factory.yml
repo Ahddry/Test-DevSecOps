@@ -27,7 +27,8 @@ jobs:
 
         steps:
             # Fetch project source with GitHub Actions Checkout. Use either v3 or v4.
-            - uses: actions/checkout@v4
+            - name: Checkout code
+              uses: actions/checkout@v4
             - name: Verify installed tools
               run: |
                   semgrep --version
@@ -63,30 +64,62 @@ jobs:
               with:
                   name: parsed-report
                   path: parsed_file.json
-    SBOM-SCA:
-        name: SBOM - CycloneDX & SCA - Depscan
+    SBOM:
+        name: SBOM - CycloneDX
         runs-on: ubuntu-latest
-        container:
-            image: ahddry/semgrep-custom:latest
         if: (github.actor != 'dependabot[bot]')
 
         steps:
-            - uses: actions/checkout@v4
-            - name: Verify installed tools
-              run: |
-                  cdxgen -v
-                  depscan --version
-            - name: Run CycloneDx
+            - name: Checkout code
+              uses: actions/checkout@v4
+            - name: Set up Node.js
+              uses: actions/setup-node@v4
+            - name: Install cdgen
+              run: npm install -g @cyclonedx/cdxgen
+            - name: Generate CycloneDX SBOM
               run: cdxgen -o cdxgen-sbom.json
-            - name: Run depscan
-              run: depscan --bom cdxgen-sbom.json --reports-dir .
-            - name: Upload CycloneDx SBOM
+            - name: Upload CycloneDX SBOM
               uses: actions/upload-artifact@v4
               with:
                   name: cdxgen-sbom
                   path: cdxgen-sbom.json
-            - name: Upload depscan report
+
+    SCA:
+        name: SCA - Depscan
+        runs-on: ubuntu-latest
+        needs: SBOM
+        if: (github.actor != 'dependabot[bot]')
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+            - name: Install depscan
+              run: |
+                  curl -Lo depscan https://github.com/AppThreat/depscan/releases/latest/download/depscan
+                  chmod +x depscan
+            - name: Verify installed tools
+              run: depscan --version
+            - name: Run depscan
+              run: depscan --bom cdxgen-sbom.json --reports-dir .
+            - name: Upload SCA report
               uses: actions/upload-artifact@v4
               with:
                   name: depscan-report
                   path: depscan-bom.json
+
+            # - name: Verify installed tools
+            #   run: depscan --version
+            # - name: Run CycloneDx
+            #   run: cdxgen -o cdxgen-sbom.json
+            # - name: Run depscan
+            #   run: depscan --bom cdxgen-sbom.json --reports-dir .
+            # - name: Upload CycloneDx SBOM
+            #   uses: actions/upload-artifact@v4
+            #   with:
+            #       name: cdxgen-sbom
+            #       path: cdxgen-sbom.json
+            # - name: Upload depscan report
+            #   uses: actions/upload-artifact@v4
+            #   with:
+            #       name: depscan-report
+            #       path: depscan-bom.json
