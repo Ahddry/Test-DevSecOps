@@ -43,6 +43,10 @@ jobs:
                   ls -al
             - name: Run Semgrep
               run: semgrep-custom . .
+            - name: Run CycloneDx
+              run: cdxgen -o cdxgen-sbom.json
+            - name: Run depscan
+              run: depscan --bom cdxgen-sbom.json --reports-dir .
             - name: Parse results and upload to database
               env:
                   PROJECT_ID: ${{ secrets.PROJECT_ID }}
@@ -65,3 +69,13 @@ jobs:
               with:
                   name: parsed-report
                   path: parsed_file.json
+            - name: Upload CycloneDx SBOM
+              uses: actions/upload-artifact@v4
+              with:
+                  name: cdxgen-sbom
+                  path: cdxgen-sbom.json
+            - name: Upload depscan report
+              uses: actions/upload-artifact@v4
+              with:
+                  name: depscan-report
+                  path: depscan-bom.json
