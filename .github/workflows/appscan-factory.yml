@@ -93,14 +93,14 @@ jobs:
         steps:
             - name: Checkout code
               uses: actions/checkout@v4
+            - name: Set up Python
+              uses: actions/setup-python@v4
             - name: Install depscan
-              run: |
-                  curl -Lo depscan https://github.com/AppThreat/depscan/releases/latest/download/depscan
-                  chmod +x depscan
+              run: pip install owasp-depscan
             - name: Verify installed tools
-              run: ./depscan --version
+              run: depscan --version && ls -l
             - name: Run depscan
-              run: ./depscan --bom cdxgen-sbom.json --reports-dir .
+              run: depscan --bom cdxgen-sbom.json --reports-dir .
             - name: Upload SCA report
               uses: actions/upload-artifact@v4
               with:
