@@ -1,5 +1,4 @@
-# Name of this GitHub Actions workflow.
-name: Semgrep OSS scan
+name: Appscan Factory
 
 on:
     # Scan changed files in PRs (diff-aware scanning):
@@ -12,9 +11,8 @@ on:
     schedule:
         - cron: "0 0 */5 * *"
 jobs:
-    semgrep:
-        # User definable name of this GitHub Actions job.
-        name: semgrep-oss/scan
+    SAST:
+        name: SAST - semgrep-oss
         # If you are self-hosting, change the following `runs-on` value:
         runs-on: ubuntu-latest
 
@@ -43,10 +41,6 @@ jobs:
                   ls -al
             - name: Run Semgrep
               run: semgrep-custom . .
-            - name: Run CycloneDx
-              run: cdxgen -o cdxgen-sbom.json
-            - name: Run depscan
-              run: depscan --bom cdxgen-sbom.json --reports-dir .
             - name: Parse results and upload to database
               env:
                   PROJECT_ID: ${{ secrets.PROJECT_ID }}
@@ -69,6 +63,23 @@ jobs:
               with:
                   name: parsed-report
                   path: parsed_file.json
+    SBOM-SCA:
+        name: SBOM - CycloneDX & SCA - Depscan
+        runs-on: ubuntu-latest
+        container:
+            image: ahddry/semgrep-custom:latest
+        if: (github.actor != 'dependabot[bot]')
+
+        steps:
+            - uses: actions/checkout@v4
+            - name: Verify installed tools
+              run: |
+                  cdxgen -v
+                  depscan --version
+            - name: Run CycloneDx
+              run: cdxgen -o cdxgen-sbom.json
+            - name: Run depscan
+              run: depscan --bom cdxgen-sbom.json --reports-dir .
             - name: Upload CycloneDx SBOM
               uses: actions/upload-artifact@v4
               with:
