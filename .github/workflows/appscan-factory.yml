@@ -106,18 +106,12 @@ jobs:
                   python-version: "3.x"
             - name: Get latest release
               id: get_release
-              uses: actions/github-script@v7
+              uses: pozetroninc/github-action-get-latest-release@master
               with:
-                  script: |
-                      const { data: releases } = await github.repos.listReleases({
-                          owner: 'Ahddry',
-                          repo: 'sast-visu-tools'
-                      });
-                      const latestRelease = releases[0];
-                      const asset = latestRelease.data.assets.find(asset => asset.name === 'parsers.zip');
-                      return {download_url: asset.browser_download_url};
+                  owner: Ahddry
+                  repo: sast-visu-tools
             - name: Download and install parser
-              run: wget ${{ steps.get_release.outputs.download_url }} -O parsers.zip && unzip parsers.zip
+              run: wget https://github.com/Ahddry/sast-visu-tools/releases/download/${{ steps.get_release.outputs.release }}/parsers.zip -O parsers.zip && unzip parsers.zip
             # - name: Install parser
             #   run: wget https://github.com/Ahddry/sast-visu-tools/releases/download/0.5.0/parsers.zip -O parsers.zip && unzip parsers.zip
             - name: Install dependencies
@@ -155,18 +149,12 @@ jobs:
                   python-version: "3.x"
             - name: Get latest release
               id: get_release
-              uses: actions/github-script@v7
+              uses: pozetroninc/github-action-get-latest-release@master
               with:
-                  script: |
-                      const { data: releases } = await github.repos.listReleases({
-                          owner: 'Ahddry',
-                          repo: 'sast-visu-tools'
-                      });
-                      const latestRelease = releases[0];
-                      const asset = latestRelease.data.assets.find(asset => asset.name === 'parsers.zip');
-                      return {download_url: asset.browser_download_url};
+                  owner: Ahddry
+                  repo: sast-visu-tools
             - name: Download and install parser
-              run: wget ${{ steps.get_release.outputs.download_url }} -O parsers.zip && unzip parsers.zip
+              run: wget https://github.com/Ahddry/sast-visu-tools/releases/download/${{ steps.get_release.outputs.release }}/parsers.zip -O parsers.zip && unzip parsers.zip
             # - name: Install parser
             #   run: wget https://github.com/Ahddry/sast-visu-tools/releases/download/0.5.0/parsers.zip -O parsers.zip && unzip parsers.zip
             - name: Install dependencies
