@@ -5,20 +5,19 @@ on:
     pull_request: {}
     # Scan on-demand through GitHub Actions interface:
     workflow_dispatch: {}
-    # Scan mainline branches and report all findings:
+    # Scan mainline branches and report all findings either on a schedule or on push:
     push:
         branches: ["master", "main"]
     schedule:
         - cron: "0 0 */5 * *"
 jobs:
+    # Perform SAST with Semgrep-OSS:
     SAST:
-        name: SAST - semgrep-oss
+        name: SAST - Semgrep-OSS
         # If you are self-hosting, change the following `runs-on` value:
         runs-on: ubuntu-latest
 
         container:
-            # A Docker image with Semgrep installed. Do not change this.
-            # image: semgrep/semgrep
             # A custom Docker image with Semgrep installed.
             image: ahddry/semgrep-custom:latest
 
@@ -26,7 +25,7 @@ jobs:
         if: (github.actor != 'dependabot[bot]')
 
         steps:
-            # Fetch project source with GitHub Actions Checkout. Use either v3 or v4.
+            # Fetch project source with GitHub Actions Checkout.
             - name: Checkout code
               uses: actions/checkout@v4
             - name: Verify installed tools
@@ -36,7 +35,7 @@ jobs:
             - name: Install parser's dependencies
               run: |
                   pip install -r requirements.txt
-            - name: ignore specific files
+            - name: Ignore specific files
               run: |
                   echo ".*" > ".semgrepignore"
                   ls -al
@@ -52,7 +51,7 @@ jobs:
               with:
                   name: report-summary
                   path: semgrep-results-summary.txt
-
+    # Perform SBOM generation and SCA audit with CycloneDX and Depscan:
     SBOM-SCA:
         name: SBOM - CycloneDX & SCA - Depscan
         runs-on: ubuntu-latest
@@ -89,6 +88,7 @@ jobs:
               with:
                   name: depscan-report
                   path: depscan-bom.json
+    # Parse and upload SAST results to database:
     SAST-upload:
         name: Parse and upload SAST results
         runs-on: ubuntu-latest
@@ -104,16 +104,15 @@ jobs:
               uses: actions/setup-python@v4
               with:
                   python-version: "3.x"
+            # Step to get the latest release version of the parser
             - name: Get latest release
               id: get_release
               uses: pozetroninc/github-action-get-latest-release@master
               with:
-                  owner: Ahddry
-                  repo: sast-visu-tools
+                  owner: ${{ github.secrets.PARSER_GITHUB_OWNER }}
+                  repo: ${{ github.secrets.PARSER_GITHUB_REPO }}
             - name: Download and install parser
-              run: wget https://github.com/Ahddry/sast-visu-tools/releases/download/${{ steps.get_release.outputs.release }}/parsers.zip -O parsers.zip && unzip parsers.zip
-            # - name: Install parser
-            #   run: wget https://github.com/Ahddry/sast-visu-tools/releases/download/0.5.0/parsers.zip -O parsers.zip && unzip parsers.zip
+              run: wget https://github.com/${{github.secrets.PARSER_GITHUB_OWNER}}/${{ github.secrets.PARSER_GITHUB_REPO }}/releases/download/${{ steps.get_release.outputs.release }}/parsers.zip -O parsers.zip && unzip parsers.zip
             - name: Install dependencies
               run: pip install -r requirements.txt
             - name: Parse results and upload to database
@@ -128,6 +127,7 @@ jobs:
               with:
                   name: parsed-report
                   path: parsed_file.json
+    # Parse and upload SBOM & SCA results to database:
     SBOM-upload:
         name: Parse and upload SBOM results
         runs-on: ubuntu-latest
@@ -147,16 +147,15 @@ jobs:
               uses: actions/setup-python@v4
               with:
                   python-version: "3.x"
+            # Step to get the latest release version of the parser
             - name: Get latest release
               id: get_release
               uses: pozetroninc/github-action-get-latest-release@master
               with:
-                  owner: Ahddry
-                  repo: sast-visu-tools
+                  owner: ${{ github.secrets.PARSER_GITHUB_OWNER }}
+                  repo: ${{ github.secrets.PARSER_GITHUB_REPO }}
             - name: Download and install parser
-              run: wget https://github.com/Ahddry/sast-visu-tools/releases/download/${{ steps.get_release.outputs.release }}/parsers.zip -O parsers.zip && unzip parsers.zip
-            # - name: Install parser
-            #   run: wget https://github.com/Ahddry/sast-visu-tools/releases/download/0.5.0/parsers.zip -O parsers.zip && unzip parsers.zip
+              run: wget https://github.com/${{github.secrets.PARSER_GITHUB_OWNER}}/${{ github.secrets.PARSER_GITHUB_REPO }}/releases/download/${{ steps.get_release.outputs.release }}/parsers.zip -O parsers.zip && unzip parsers.zip
             - name: Install dependencies
               run: pip install -r requirements.txt
             - name: Parse results and upload to database
