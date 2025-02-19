@@ -109,10 +109,10 @@ jobs:
               id: get_release
               uses: pozetroninc/github-action-get-latest-release@master
               with:
-                  owner: ${{ github.secrets.PARSER_GITHUB_OWNER }}
-                  repo: ${{ github.secrets.PARSER_GITHUB_REPO }}
+                  owner: ${{ secrets.PARSER_GITHUB_OWNER }}
+                  repo: ${{ secrets.PARSER_GITHUB_REPO }}
             - name: Download and install parser
-              run: wget https://github.com/${{github.secrets.PARSER_GITHUB_OWNER}}/${{ github.secrets.PARSER_GITHUB_REPO }}/releases/download/${{ steps.get_release.outputs.release }}/parsers.zip -O parsers.zip && unzip parsers.zip
+              run: wget https://github.com/${{secrets.PARSER_GITHUB_OWNER}}/${{ secrets.PARSER_GITHUB_REPO }}/releases/download/${{ steps.get_release.outputs.release }}/parsers.zip -O parsers.zip && unzip parsers.zip
             - name: Install dependencies
               run: pip install -r requirements.txt
             - name: Parse results and upload to database
@@ -152,10 +152,10 @@ jobs:
               id: get_release
               uses: pozetroninc/github-action-get-latest-release@master
               with:
-                  owner: ${{ github.secrets.PARSER_GITHUB_OWNER }}
-                  repo: ${{ github.secrets.PARSER_GITHUB_REPO }}
+                  owner: ${{ secrets.PARSER_GITHUB_OWNER }}
+                  repo: ${{ secrets.PARSER_GITHUB_REPO }}
             - name: Download and install parser
-              run: wget https://github.com/${{github.secrets.PARSER_GITHUB_OWNER}}/${{ github.secrets.PARSER_GITHUB_REPO }}/releases/download/${{ steps.get_release.outputs.release }}/parsers.zip -O parsers.zip && unzip parsers.zip
+              run: wget https://github.com/${{secrets.PARSER_GITHUB_OWNER}}/${{ secrets.PARSER_GITHUB_REPO }}/releases/download/${{ steps.get_release.outputs.release }}/parsers.zip -O parsers.zip && unzip parsers.zip
             - name: Install dependencies
               run: pip install -r requirements.txt
             - name: Parse results and upload to database
