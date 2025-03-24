@@ -5,68 +5,93 @@ pipeline {
     }
   }
 
+  environment {
+    SEMGREP_APP_TOKEN = credentials('SEMGREP_APP_TOKEN')
+  }
 
   stages {
-    stage('Build') {
-        steps {
-            echo 'Building..'
-            sh 'pip --version'
-            sh 'semgrep --version'
-            sh '/home/jenkins/dependency-check/bin/dependency-check.sh --version'
-            sh 'ls -l /usr/local/bin/'
-            echo 'Build completed.'
-        }
-    }
-
-    stage('Semgrep-Scan') {
-        steps {
-          sh 'semgrep-custom . .'
-          archiveArtifacts artifacts: 'semgrep-report.json'
-          archiveArtifacts artifacts: 'semgrep-results-summary.txt'
-      }
-    }
-
-    stage('SCA OWASP Dependency-Check') {
+    stage('SAST - Semgrep-OSS') {
       steps {
-        sh '/home/jenkins/dependency-check/bin/dependency-check.sh -n --scan . --format "ALL" --out .'
-        archiveArtifacts artifacts: 'dependency-check-report.html'
-        dependencyCheckPublisher pattern: 'dependency-check-report.xml'
-      }
-    }
-
-    stage('Block pipeline if there are critical vulnerabilities') {
-      steps {
-        script {
-          def semgrepReport = readFile 'semgrep-report.json'
-          if (semgrepReport.contains('severity": "error')) {
-            echo 'There are critical vulnerabilities in the code of the project! Blocking the pipeline..'
-            error 'There are critical vulnerabilities in the code of the project'
-          }
-          def odcReport = readFile 'dependency-check-report.html'
-          if (odcReport.contains('Severity: critical')) {
-            echo 'There are critical vulnerabilities in the dependencies of the project! Blocking the pipeline..'
-            error 'There are critical vulnerabilities in the dependencies of the project'
-          }
+      script {
+        docker.image('ahddry/semgrep-custom:latest').inside {
+        sh '''
+          semgrep --version
+          visu-semgrep-ci -t
+          pip install -r requirements.txt
+          echo ".*" > ".semgrepignore"
+          ls -al
+          semgrep-custom . .
+        '''
+        archiveArtifacts artifacts: 'semgrep-report.json', allowEmptyArchive: true
+        archiveArtifacts artifacts: 'semgrep-results-summary.txt', allowEmptyArchive: true
         }
       }
+      }
     }
 
-    // stage('Publish reports to external storage')
-    // {
-    //   steps {
-    //     script {
-    //       def semgrepReport = readFile 'semgrep.json'
-    //       def odcReport = readFile 'dependency-check-report.json'
-    //       // publish reports to external storage
-    //       echo 'Publishing reports to external storage..'
-    //       def awsS3 = [:]
-    //       awsS3['files'] = 'dependency-check-report.xml' // Remplace avec le nom de ton fichier de rapport
-    //       awsS3['bucket'] = 'test-devsecops-op-jenkins '
-    //       awsS3['path'] = '${env.BUILD_ID}' // Optionnel : spécifie un chemin dans le bucket
-    //       awsS3Upload(awsS3)
-    //     }
-    //   }
-    // }
+    stage('SBOM - CycloneDX & SCA - Depscan') {
+      steps {
+      script {
+        sh '''
+        npm install -g @cyclonedx/cdxgen
+        pip install owasp-depscan
+        cdxgen -v
+        depscan --version
+        cdxgen -o cdxgen-sbom.json
+        depscan --no-vuln-table --no-banner --bom cdxgen-sbom.json --reports-dir .
+        '''
+        archiveArtifacts artifacts: 'cdxgen-sbom.json', allowEmptyArchive: true
+        archiveArtifacts artifacts: 'depscan-bom.json', allowEmptyArchive: true
+      }
+      }
+    }
+
+    stage('Parse and upload SAST results') {
+      steps {
+      script {
+        withCredentials([
+        string(credentialsId: 'PARSER_GITHUB_OWNER', variable: 'PARSER_GITHUB_OWNER'),
+        string(credentialsId: 'PARSER_GITHUB_REPO', variable: 'PARSER_GITHUB_REPO'),
+        string(credentialsId: 'PROJECT_ID', variable: 'PROJECT_ID'),
+        string(credentialsId: 'MONGODB_URL', variable: 'MONGODB_URL'),
+        string(credentialsId: 'MONGODB_USERNAME', variable: 'MONGODB_USERNAME'),
+        string(credentialsId: 'MONGODB_PASSWORD', variable: 'MONGODB_PASSWORD')
+        ]) {
+          // wget https://github.com/${PARSER_GITHUB_OWNER}/${PARSER_GITHUB_REPO}/releases/latest/download/parsers.zip -O parsers.zip
+        sh '''
+          wget https://github.com/Ahddry/sast-visu-tools/releases/latest/download/parsers.zip -O parsers.zip
+          unzip parsers.zip
+          pip install -r requirements.txt
+          python sast-parser.py semgrep-report.json
+        '''
+        archiveArtifacts artifacts: 'parsed_file.json', allowEmptyArchive: true
+        }
+      }
+      }
+    }
+
+    stage('Parse and upload SBOM results') {
+      steps {
+      script {
+        withCredentials([
+        string(credentialsId: 'PARSER_GITHUB_OWNER', variable: 'PARSER_GITHUB_OWNER'),
+        string(credentialsId: 'PARSER_GITHUB_REPO', variable: 'PARSER_GITHUB_REPO'),
+        string(credentialsId: 'PROJECT_ID', variable: 'PROJECT_ID'),
+        string(credentialsId: 'MONGODB_URL', variable: 'MONGODB_URL'),
+        string(credentialsId: 'MONGODB_USERNAME', variable: 'MONGODB_USERNAME'),
+        string(credentialsId: 'MONGODB_PASSWORD', variable: 'MONGODB_PASSWORD')
+        ]) {
+          // wget https://github.com/${PARSER_GITHUB_OWNER}/${PARSER_GITHUB_REPO}/releases/latest/download/parsers.zip -O parsers.zip
+        sh '''
+          wget https://github.com/Ahddry/sast-visu-tools/releases/latest/download/parsers.zip -O parsers.zip
+          unzip parsers.zip
+          pip install -r requirements.txt
+          python sbom-parser.py cdxgen-sbom.json depscan-bom.json
+        '''
+        }
+      }
+      }
+    }
   }
 
   post {
