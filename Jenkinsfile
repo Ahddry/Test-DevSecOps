@@ -15,7 +15,7 @@ pipeline {
       script {
         sh '''
           semgrep --version
-          pip install -r requirements.txt
+          pip install -r requirements.txt --break-system-packages
           echo ".*" > ".semgrepignore"
           ls -al
           semgrep-custom . .
@@ -31,7 +31,7 @@ pipeline {
       script {
         sh '''
         npm install -g @cyclonedx/cdxgen
-        pip install owasp-depscan
+        pip install owasp-depscan --break-system-packages
         cdxgen -v
         depscan --version
         cdxgen -o cdxgen-sbom.json
@@ -58,7 +58,7 @@ pipeline {
         sh '''
           wget https://github.com/Ahddry/sast-visu-tools/releases/latest/download/parsers.zip -O parsers.zip
           unzip parsers.zip
-          pip install -r requirements.txt
+          pip install -r requirements.txt --break-system-packages
           python sast-parser.py semgrep-report.json
         '''
         archiveArtifacts artifacts: 'parsed_file.json', allowEmptyArchive: true
@@ -82,7 +82,7 @@ pipeline {
         sh '''
           wget https://github.com/Ahddry/sast-visu-tools/releases/latest/download/parsers.zip -O parsers.zip
           unzip parsers.zip
-          pip install -r requirements.txt
+          pip install -r requirements.txt --break-system-packages
           python sbom-parser.py cdxgen-sbom.json depscan-bom.json
         '''
         }
