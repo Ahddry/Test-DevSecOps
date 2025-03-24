@@ -13,7 +13,6 @@ pipeline {
     stage('SAST - Semgrep-OSS') {
       steps {
       script {
-        docker.image('ahddry/semgrep-custom:latest').inside {
         sh '''
           semgrep --version
           visu-semgrep-ci -t
@@ -24,7 +23,6 @@ pipeline {
         '''
         archiveArtifacts artifacts: 'semgrep-report.json', allowEmptyArchive: true
         archiveArtifacts artifacts: 'semgrep-results-summary.txt', allowEmptyArchive: true
-        }
       }
       }
     }
