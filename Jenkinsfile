@@ -15,7 +15,6 @@ pipeline {
       script {
         sh '''
           semgrep --version
-          visu-semgrep-ci -t
           pip install -r requirements.txt
           echo ".*" > ".semgrepignore"
           ls -al
