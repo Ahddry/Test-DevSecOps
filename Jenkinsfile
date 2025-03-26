@@ -56,7 +56,7 @@ pipeline {
         sh '''
           wget https://github.com/Ahddry/sast-visu-tools/releases/download/0.5.0/parsers.zip -O parsers.zip
           unzip -n parsers.zip
-          python sast-parser.py semgrep-report.json
+          python3 sast-parser.py semgrep-report.json
         '''
         archiveArtifacts artifacts: 'parsed_file.json', allowEmptyArchive: true
         }
@@ -77,7 +77,7 @@ pipeline {
         ]) {
           // wget https://github.com/${PARSER_GITHUB_OWNER}/${PARSER_GITHUB_REPO}/releases/latest/download/parsers.zip -O parsers.zip
         sh '''
-          python sbom-parser.py cdxgen-sbom.json depscan-bom.json
+          python3 sbom-parser.py cdxgen-sbom.json depscan-bom.json
         '''
         }
       }
