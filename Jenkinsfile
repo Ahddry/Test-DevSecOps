@@ -15,10 +15,10 @@ pipeline {
       script {
         sh '''
           semgrep --version
-          pip install -r requirements.txt --break-system-packages
           echo ".*" > ".semgrepignore"
           ls -al
           semgrep-custom . .
+          ls -al
         '''
         archiveArtifacts artifacts: 'semgrep-report.json', allowEmptyArchive: true
         archiveArtifacts artifacts: 'semgrep-results-summary.txt', allowEmptyArchive: true
