@@ -15,7 +15,6 @@ pipeline {
       script {
         sh '''
           semgrep --version
-          echo ".*" > ".semgrepignore"
           ls -al
           semgrep-custom . .
           ls -al
