@@ -55,7 +55,7 @@ pipeline {
           // wget https://github.com/${PARSER_GITHUB_OWNER}/${PARSER_GITHUB_REPO}/releases/latest/download/parsers.zip -O parsers.zip
         sh '''
           wget https://github.com/Ahddry/sast-visu-tools/releases/download/0.5.0/parsers.zip -O parsers.zip
-          unzip parsers.zip
+          unzip parsers.zip -n
           python sast-parser.py semgrep-report.json
         '''
         archiveArtifacts artifacts: 'parsed_file.json', allowEmptyArchive: true
