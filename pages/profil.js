@@ -6,7 +6,6 @@ import Context from "../components/UserContext";
 import { useContext, useState, useEffect } from "react";
 import Context2 from "../components/ThemeContext";
 import { FaGithub } from "react-icons/fa";
-import { useRouter } from "next/router";
 
 // Page d'informations du profil
 
@@ -19,8 +18,6 @@ function Profil() {
     const [loading, setLoading] = useState(false);
 
     const [col, setCol] = useState(user ? user.colour : "default");
-
-    const router = useRouter();
 
     useEffect(() => {
         updateColour(col);
