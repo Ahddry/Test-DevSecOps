@@ -1,8 +1,6 @@
 import Footer from "../components/Footer";
-import Context from "../components/UserContext";
 import Link from "next/link";
-import { useContext, useState, useEffect } from "react";
-import { useRouter } from "next/router";
+import { useContext, useState } from "react";
 import Context2 from "../components/ThemeContext";
 
 const md5 = require("md5");
@@ -18,24 +16,21 @@ function SignUp() {
     const [loading, setLoading] = useState(false);
     const [tryMdp, setTryMdp] = useState(false);
 
-    const router = useRouter();
-    const { login } = useContext(Context);
-
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             setLoading(true);
             let ok = true;
             setEmail(email.toLowerCase());
             async function createCompte() {
-                data = null;
+                let data = null;
                 if (data !== null) {
                     alert("Ce nom d'utilisateur existe déjà");
                     setTryMdp(true);
                     ok = false;
-                    if (error) throw error;
                 }
             }
+            await createCompte();
         } catch (error) {
             console.log(error);
             alert("Erreur lors de l'inscription");
