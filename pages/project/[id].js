@@ -15,12 +15,12 @@ function ProjectPage({ projet, commentaire }) {
     const { colour } = useContext(Context2);
     const { user } = useContext(Context);
     const [addComm, setAddComm] = useState(false);
-    const [closeBoxe, setCloseBox] = useState(false);
+    const [closeBoxe, setCloseBoxe] = useState(false);
     const [edit, setEdit] = useState(false);
     const [canUserEdit, setCanUserEdit] = useState(false);
     const [titre, setTitre] = useState(projet.name);
     const [description, setDescription] = useState(projet.description);
-    const [langages, setLangages] = useState(projet.language);
+    const [, setLangages] = useState(projet.language);
     const [images, setImages] = useState(projet.listeimage);
     const [github, setGithub] = useState(projet.github);
     const [contributeur, setContributeur] = useState(projet.participants);
@@ -59,11 +59,10 @@ function ProjectPage({ projet, commentaire }) {
     const listLanguage = ["C", "C++", "C#", "CSS", "HTML", "Java", "JavaFX", "JavaScript", "PHP", "Python", "React", "SQL", "Tailwind"];
     const setprojetLanguage = () => {
         let newLangages = new Array(listLanguage.length).fill(false);
-        for (let j = 0; j < projet.language.length; j++) {
-            for (let i = 0; i < listLanguage.length; i++) {
-                if (listLanguage[i] === projet.language[j]) {
-                    newLangages[i] = true;
-                }
+        for (const lang of projet.language) {
+            const idx = listLanguage.indexOf(lang);
+            if (idx !== -1) {
+                newLangages[idx] = true;
             }
         }
         return newLangages;
@@ -147,7 +146,7 @@ function ProjectPage({ projet, commentaire }) {
         setEdit(false);
     };
     const getCloseBoxe = (state) => {
-        setCloseBox(state);
+        setCloseBoxe(state);
     };
     useEffect(() => {
         if (closeBoxe) {
@@ -432,7 +431,7 @@ function ProjectPage({ projet, commentaire }) {
 
 export async function getServerSideProps({ params: { id } }) {
     const { data: projet } = await supabase.from("projets").select("*").eq("id", id).single();
-    const { data: commentaire, error } = await supabase.from("commentaire").select("id,created_at,projets_id,userid,auteur:userid(username),titre,contenue,etoile").eq("projets_id", id);
+    const { data: commentaire } = await supabase.from("commentaire").select("id,created_at,projets_id,userid,auteur:userid(username),titre,contenue,etoile").eq("projets_id", id);
     return {
         props: {
             projet,
