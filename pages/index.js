@@ -1,6 +1,6 @@
 import Image from "next/legacy/image";
 import { ImArrowDown2 } from "react-icons/im";
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext } from "react";
 import Adrien from "../components/Adrien";
 import Aurelien from "../components/Aurelien";
 import Context2 from "../components/ThemeContext";
