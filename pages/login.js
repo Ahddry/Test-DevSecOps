@@ -1,6 +1,6 @@
 import Footer from "../components/Footer";
 import Context from "../components/UserContext";
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Context2 from "../components/ThemeContext";
@@ -12,7 +12,7 @@ function Login() {
     const { updateColour } = useContext(Context2);
     const [username, setUsername] = useState("");
     const [mdp, setMdp] = useState("");
-    const [loading, setLoading] = useState(false);
+    const [, setLoading] = useState(false);
 
     let router = useRouter();
     function redirect() {
@@ -29,12 +29,12 @@ function Login() {
                 let ok = true;
                 let email;
                 const { data, error } = await supabase.from("comptes").select("*").eq("username", username).single();
-                if (data !== null) {
-                    email = data.email;
-                    if (error) throw error;
-                } else {
+                if (data === null) {
                     alert("Utilisateur inconnu");
                     ok = false;
+                } else {
+                    email = data.email;
+                    if (error) throw error;
                 }
                 if (!ok) return;
                 await supabase.auth.signInWithPassword({ email, password: mdp }).then(({ data, error }) => {
@@ -78,7 +78,6 @@ function Login() {
     const loginGithub = () => {
         try {
             async function checkUser() {
-                let ok = true;
                 await supabase.auth.signInWithOAuth({
                     provider: "github",
                     options: {
