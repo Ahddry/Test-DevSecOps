@@ -1,5 +1,5 @@
 var mysql = require("db-mysql");
-var http = require("http");
+var http = require("node:http");
 var out;
 var valTom;
 var req = http.request(options, function (res) {
