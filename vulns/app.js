@@ -1,9 +1,9 @@
 var express = require("express");
 var session = require("express-session");
 var engine = require("ejs-locals");
-var path = require("path");
+var path = require("node:path");
 var favicon = require("serve-favicon");
-var fs = require("fs");
+var fs = require("node:fs");
 var logger = require("morgan");
 var cookieParser = require("cookie-parser");
 var bodyParser = require("body-parser");
@@ -14,6 +14,7 @@ var login = require("./routes/login");
 var products = require("./routes/products");
 
 var app = express();
+app.disable("x-powered-by");
 
 // config second logger
 log4js.loadAppender("file");
@@ -60,7 +61,7 @@ if (app.get("env") === "development") {
         res.status(err.status || 500);
         res.render("error", {
             message: err.message,
-            error: err,
+            error: {},
         });
     });
 }
